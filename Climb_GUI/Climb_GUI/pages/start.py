@@ -43,6 +43,7 @@ color_ranges = {
 }
 
 def colors(img_path, chosenColor, name):  
+    # array of tuples containing coordinates of each box
     bounding_boxes = []  
     img = cv.imread(img_path) #load image
     if img is None:
@@ -68,7 +69,7 @@ def colors(img_path, chosenColor, name):
             cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor("blue"), 2)
         elif(i % 2 != 0 and chosenColor == "blue"):
             cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor("red"), 2)
-
+        
     cv.imwrite(f"assets/output_{str(datetime.now().minute)+'_'+name}", img_marked)
     
 class Global_State(State):
