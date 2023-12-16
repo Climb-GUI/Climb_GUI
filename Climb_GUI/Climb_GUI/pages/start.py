@@ -8,6 +8,7 @@ import numpy as np
 import cv2 as cv
 import asyncio
 from datetime import datetime
+from Climb_GUI.lib.path_calc import shortestPath
 
 def strToColor(color):
     color = color.lower()
@@ -62,13 +63,28 @@ def colors(img_path, chosenColor, name):
                 cv.rectangle(img_marked, (x, y), (x+z,y+a), strToColor(chosenColor), 2) #Green bound box
                 bounding_boxes.append(((x, y), (x + z, y + a)))  # Store bounding box coordinates
 
-    for i in range(len(bounding_boxes) - 1):
-        if(i % 2 == 0):
-            cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor(chosenColor), 2)
-        elif(i % 2 != 0 and chosenColor != "blue"):
-            cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor("blue"), 2)
-        elif(i % 2 != 0 and chosenColor == "blue"):
-            cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor("red"), 2)
+    # for i in range(len(bounding_boxes) - 1):
+    #     if(i % 2 == 0):
+    #         cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor(chosenColor), 2)
+    #     elif(i % 2 != 0 and chosenColor != "blue"):
+    #         cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor("blue"), 2)
+    #     elif(i % 2 != 0 and chosenColor == "blue"):
+    #         cv.line(img_marked, bounding_boxes[i][1], bounding_boxes[i + 1][0], strToColor("red"), 2)
+    
+    path = shortestPath(bounding_boxes[0], bounding_boxes[len(bounding_boxes)-1], bounding_boxes, 300)
+    path1 = shortestPath(bounding_boxes[1], bounding_boxes[len(bounding_boxes)-1], bounding_boxes, 250)
+    path2 = shortestPath(bounding_boxes[2], bounding_boxes[len(bounding_boxes)-1], bounding_boxes, 200)
+    path3 = shortestPath(bounding_boxes[3], bounding_boxes[len(bounding_boxes)-1], bounding_boxes, 150)
+    
+    for i in range(len(path)-1):
+        cv.line(img_marked, path[i][1], path[i+1][0], strToColor("blue"), 2)
+    for i in range(len(path1)-1):
+        cv.line(img_marked, path1[i][1], path1[i+1][0], strToColor("red"), 2)
+    for i in range(len(path2)-1):
+        cv.line(img_marked, path2[i][1], path2[i+1][0], strToColor("green"), 2)
+    for i in range(len(path3)-1):
+        cv.line(img_marked, path3[i][1], path3[i+1][0], strToColor("yellow"), 2)
+
         
     cv.imwrite(f"assets/output_{str(datetime.now().minute)+'_'+name}", img_marked)
     

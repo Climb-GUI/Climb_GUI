@@ -2,102 +2,88 @@ import math
 import sys
 from queue import Queue
 
+class Vertex:
+    def __init__(self, value):
+        self.value = value
+        self.color = "White"
+        self.distance = -1
+        self.predecessor = None
+
 def makeVertices(bounding_boxes):
     # bounding_boxes = [((x,y), (x,y)), ((x,y), (x,y)), ...]
-    # vertices = [(((x,y), (x,y)), string,      int, graphnodes[x]), ...]
-    # vertices = [(    value     ,  color, distance,   predecessor), ...]
-    # bounding_boxes list of tuples with two tuples with x & y
+    # vertices = [(((x,y), (x,y)),  color, distance,   predecessor), ...]
     vertices = {}
     for node in bounding_boxes:
-        vertices[node] = (node, "White", None, None)
+        vertices[node] = Vertex(node)
         
     return vertices
 
-def inRadius(curr, bounding_boxes):
+def BFS(start, vertices, adjList):
+    for vert in vertices.values():
+        vert.color = "White"
+        vert.distance = sys.maxsize
+        vert.predecessor = None
+
+    vertices[start].color = "Gray"
+    vertices[start].distance = 0
+    vertices[start].predecessor = None
+
+    q = Queue()
+    q.put(start)
+
+    visited = []
+
+    while not q.empty():
+        u = q.get()
+        visited.append(u)
+
+        for adj in adjList[u]:
+            ad = vertices[adj]
+            if ad.color == "White":
+                ad.color = "Gray"
+                ad.distance = vertices[u].distance + 1
+                ad.predecessor = vertices[u]
+                q.put(adj)
+
+        vertices[u].color = "Black"
+
+    return visited
+
+def inRadius(curr, bounding_boxes, vertices, radius):
     lis = []
-    # iterating through bounding boxes, 
-    # if distance between current and any box is close enough, add to list
-    for box in bounding_boxes:
-        if(dist(bounding_boxes[curr][1] - box[0]) < 100):
-            lis.append(box)
-    # lis = [((x,y), (x,y)), ((x,y), (x,y))]
+    for i in range(len(bounding_boxes)):
+        # 100 is hard coded value, change to something else
+        if dist(vertices[curr].value[1], bounding_boxes[i][0]) < radius:
+            lis.append(bounding_boxes[i])
     return lis
-           
-# distance formula
+
 def dist(curr, next):     
     x = next[0] - curr[0]
     y = next[1] - curr[1]
-    t1 = math.pow(x, 2)
-    t2 = math.pow(y, 2)
-    dist = math.sqrt(t1 + t2)
-    
-    return dist
+    return math.sqrt(math.pow(x, 2) + math.pow(y, 2))
 
-def makeAdjList(bounding_boxes):
-    # adj list should be index of node as key, 
-    # then list of tuples after which are the connected nodes
-    # map<key, set<tuple<tuple>>>
-    # each key is assoc. with a set of tuples 
-    # (bottom left corner of box and top right corner of box)
-    # each item in the tuple is a coordinate, containing x & y coords of the point
-    adjList = {}
+def makeAdjList(bounding_boxes, vertices, radius):
     # adjlist = {
     #            key1: [((x,y), (x,y)), ((x,y), (x,y))]
     #            key2: [((x,y), (x,y)), ((x,y), (x,y))]
     #           }
-    # iterating through bounding boxes, if key doesn't exist, add it
-    # append the list for the specific key to map to the key
-    # list for key contains tuple with two tuples
-    
+    adjList = {}
     for key in bounding_boxes:
-        if(key not in adjList):
-            adjList[key] = []
-        adjList[key].append(inRadius(key, bounding_boxes))
-    
+        adjList[key] = []
+        adjList[key].extend(inRadius(key, bounding_boxes, vertices, radius))
     return adjList
 
-# start is starting coordinates (current node)
-def BFS(start, vertices, adjList):
-    for vert in vertices:
-        vert[0][1] = "White"
-        vert[0][2] = sys.maxsize
-        vert[0][3] = None
+def shortestPath(start, end, bounding_boxes, radius):
+    vertices = makeVertices(bounding_boxes)
+    adjList = makeAdjList(bounding_boxes, vertices, radius)
+    BFS(start, vertices, adjList)
 
-    vertices[start][1] = "Gray"
-    vertices[start][2] = 0
-    vertices[start][3] = None
-    
-    q = Queue()
-    q.push((start, "White", -1, None))
+    path = []
+    current_vertex = end
 
-    visited = list()
+    while current_vertex != start:
+        path.insert(0, current_vertex)
+        current_vertex = vertices[current_vertex].predecessor.value
 
-    while(not q.empty()):
-        u = q.front()
-        q.pop()
-        visited.append(u[0])
-        
-        for adj in adjList[u[0]]:
-            ad = vertices[adj]
-            if(ad[1] == "White"):
-                ad[1] = "Gray"
-                ad[2] = u[2] + 1
-                ad[3] = u[0]
-                q.push(adj)
-
-        u[1] = "Black"
-
-    return visited
-
-def shortestPath(start, end, vertices):
-    BFS(start)
-
-    pathLength = 0
-    vertex = end
-
-    while (vertex != start):
-        v = vertices[vertex][3]
-        vertex = v[0]
-        pathLength = pathLength + 1
-
-    return pathLength;      
+    path.insert(0, start)
+    return path
