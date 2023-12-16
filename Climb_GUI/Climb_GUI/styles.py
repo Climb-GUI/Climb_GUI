@@ -32,7 +32,8 @@ link_style = {
 
 overlapping_button_style = {
     "background_color": "white",
-    "border": border,
+    # "background_color": "black",
+    # "border": border,
     "border_radius": border_radius,
 }
 
@@ -43,6 +44,9 @@ base_style = {
         **overlapping_button_style,
     },
     rx.MenuItem: hover_accent_bg,
+    # "background_color": "black",
+    "background_image":"linear-gradient(180deg,#1f1e1d,#000000)",
+    "color": "#6b63f6"
 }
 
 markdown_style = {

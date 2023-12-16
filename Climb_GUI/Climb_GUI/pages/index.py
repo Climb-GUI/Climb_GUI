@@ -5,7 +5,23 @@ from datetime import date
 
 import reflex as rx
 
-header = rx.heading("Welcome to Climb GUI!")
+header = rx.heading(
+    # "Welcome to Climb GUI!", 
+    # "Gradient Text", 
+    # color="white"
+    "Welcome to Climb GUI",
+    style={
+        # "background_image": "linear-gradient(to right, #ffe259, #ffa751)",
+        "background_image":"linear-gradient(144deg,#7F00FF,#E100FF)",
+        "background_clip": "text",
+        "color": "transparent",
+        "webkit_background_clip": "text",
+        "webkit_text_fill_color": "transparent",
+        "moz_background_clip": "text",
+        "moz_text_fill_color": "transparent",
+    }
+)
+
 content = "With the help of computer-vision you can now scan any rock-climbing surface and receive a personalized path to get you to the top as efficiently as possible. Simply fill out your profile and then click START. Happy climbing!"
 instructions_header = "Instructions:"
 instructions_body1 = "1) Click on the PROFILE tab."
@@ -45,7 +61,7 @@ main_comp = rx.vstack(
     instructionsbody7,
     instructionsbody8,
     *([rx.spacer()] * 8),
-    footer
+    footer,
 )
 
 @template(route="/", title="Home")

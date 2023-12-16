@@ -132,9 +132,10 @@ def start():
             rx.box(
                 rx.button(
                     "Select File",
-                    color=color,
+                    color="black",
                     bg="white",
                     border=f"1px solid {color}",
+                    background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)",
                 ),
                 rx.text(
                     "Drag and drop files here or click to select files"
@@ -161,7 +162,9 @@ def start():
             on_click=lambda: Global_State.handle_upload(
                 rx.upload_files()
             ),
-            margin_y = "1em"
+            margin_y = "1em",
+            color="black",
+            background_image="linear-gradient(144deg,#00DDEB,#5B42F3 50%,#AF40FF)",
         ),
         rx.foreach(
             Global_State.names,
@@ -175,5 +178,5 @@ def start():
                 width = "100%"
             ),
         ),
-        rx.text("Every single hold our program detects is connected to by a line, the left side of the line indicates a left hand or foot, and the right side indicates a right hand or foot.", width="100%"),
+        # rx.text("Every single hold our program detects is connected to by a line, the left side of the line indicates a left hand or foot, and the right side indicates a right hand or foot.", width="100%"),
     )

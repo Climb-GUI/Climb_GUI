@@ -20,7 +20,7 @@ class ProfileState(State):
         
         print(self.name)
         print(self.bio)
-
+        
 
 @template(route="/Profile", title="Profile")
 def profile() -> rx.Component:

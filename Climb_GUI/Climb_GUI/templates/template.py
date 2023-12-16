@@ -60,6 +60,26 @@ def menu_button() -> rx.Component:
         z_index="500",
     )
 
+def top_bar():
+    return rx.box(
+        rx.hstack(
+            rx.link(rx.image(src="/CLIMB_GUI_LOGO.png", height="4.0em"), href="/"),
+            rx.button_group(
+                rx.link(rx.button("Profile", bg="black", color="white"), href="/Profile", button=True),
+                rx.link(rx.button("Start", bg="black", color="white"), href="/start", button=True),
+                #variant="outline",
+                is_attached=True,
+                
+            )
+        ),
+        position="fixed",
+        width="100%",
+        top="0px",
+        z_index="5",
+        # Additional styling as needed
+    )
+
+
 
 def template(
     route: str | None = None,
@@ -96,7 +116,7 @@ def template(
         """
         # Get the meta tags for the page.
         all_meta = [*default_meta, *(meta or [])]
-
+        
         @rx.page(
             route=route,
             title=title,
@@ -108,7 +128,8 @@ def template(
         )
         def templated_page():
             return rx.hstack(
-                sidebar(),
+                #sidebar(),
+                top_bar(),
                 rx.box(
                     rx.box(
                         page_content(),
@@ -117,12 +138,15 @@ def template(
                     **styles.template_page_style,
                 ),
                 rx.spacer(),
-                menu_button(),
+                #menu_button(),
                 align_items="flex-start",
                 transition="left 0.5s, width 0.5s",
                 position="relative",
+                background_color="black",
+                #background_image="linear-gradient(144deg,#AF40FF,#5B42F3 50%,#00DDEB)",
+                background_image="linear-gradient(0deg,#1f1e1d,#000000)",
             )
-
-        return templated_page
+        
+            return templated_page
 
     return decorator
