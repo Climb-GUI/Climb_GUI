@@ -5,3 +5,4 @@ gunicorn==23.0.0
 scipy==1.15.1
 pillow==11.1.0
 numpy==2.2.2
+python-dotenv==1.0.1

@@ -7,6 +7,9 @@ from flask_cors import CORS
 from path_calc import shortestPath
 from PIL import Image
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -35,6 +38,24 @@ def strToColor(color):
         "black": (0, 0, 0),
     }
     return mapping.get(color.lower(), (255, 255, 255))
+
+def check_api_key(request):
+    expected_api_key = os.getenv("API_KEY")
+    
+    if not expected_api_key:
+        return jsonify({"success": False, "error": "Missing API_KEY in environment"}), 404
+
+    auth_header = request.headers.get("Authorization")
+    
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return jsonify({"success": False, "error": "Invalid or missing Bearer token"}), 401
+    
+    provided_api_key = auth_header.split("Bearer ")[1]
+
+    if provided_api_key != expected_api_key:
+        return jsonify({"success": False, "error": "Invalid API key"}), 403
+
+    return jsonify({"success": True, "message": "Authenticated"}), 200
 
 
 # Process a single color mask and extract bounding boxes
@@ -110,10 +131,19 @@ def get_colors(image, colors):
 
 @app.route("/api/test", methods=["GET"])
 def test():
+    res = check_api_key(request)
+    if res[1] != 200:
+        return res
+    
     return jsonify({"success": True}), 200
 
 @app.route("/api/getPath/<colors>", methods=["POST"])
 def alter_image(colors):
+    res = check_api_key(request)
+    if res[1] != 200:
+        return res
+    
+    
     if "file" not in request.files:
         return jsonify({"error": "No file uploaded"}), 400
 
