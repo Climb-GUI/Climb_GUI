@@ -1,6 +1,6 @@
-# 🏔️ Climb GUI - Legacy Implementation (Reflex)
+# 🏔️ Climb GUI - Backend (Flask)
 
-This is the **Reflex** implementation for **Climb GUI**. Reference the [reflex docs](https://reflex.dev/docs/getting-started/introduction) if you have trouble with this setup.
+This is the **Flask backend** for **Climb GUI**.
 
 ---
 
@@ -9,7 +9,10 @@ This is the **Reflex** implementation for **Climb GUI**. Reference the [reflex d
 1. [Prerequisites](#prerequisites)
 2. [Setup Instructions](#setup-instructions)
    - [Installing Dependencies](#installing-dependencies)
-   - [Running the App](#running-the-app)
+   - [Running the Backend](#running-the-backend)
+   - [Environment Variables](#environment-variables)
+3. [Testing](#testing)
+
 ---
 
 ## **Prerequisites**
@@ -25,7 +28,7 @@ This is the **Reflex** implementation for **Climb GUI**. Reference the [reflex d
 
 1. Navigate to the backend directory:
    ```bash
-   cd Climb_GUI
+   cd backend
    ```
 
 2. (Optional) Create a virtual environment:
@@ -42,11 +45,31 @@ This is the **Reflex** implementation for **Climb GUI**. Reference the [reflex d
 
 ---
 
-### **Running the App**
-Start the Reflex app:
+### **Running the Backend**
+Start the Flask server:
 
 ```bash
-reflex run
+python server.py
 ```
 
-The API will be available at `http://localhost:3000`.
+The API will be available at `http://localhost:8080`.
+
+---
+
+### **Environment Variables**
+Create a `.env` file in the `backend` directory to store the API key.
+
+Example:
+```
+API_KEY=YOUR-API-KEY
+```
+
+---
+
+## Testing
+
+If you have done the steps above, you can test by visiting `http://localhost:8080/api/test` or running
+
+```bash
+curl -X GET "http://localhost:8080/api/test" -H "Authorization: Bearer YOUR-API-KEY"
+```
