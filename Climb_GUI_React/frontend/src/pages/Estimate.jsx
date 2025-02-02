@@ -7,6 +7,7 @@ function Estimate() {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [originalImageUrl, setOriginalImageUrl] = useState("");
 	const [alteredImageUrl, setAlteredImageUrl] = useState("");
+	const [loading, setLoading] = useState(false);
 	const [allColors, setAllColors] = useState({
 		red: false,
 		green: false,
@@ -31,6 +32,8 @@ function Estimate() {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		if (!selectedFile) return;
+
+		setLoading(true);
 
 		const formData = new FormData();
 		formData.append("file", selectedFile);
@@ -63,7 +66,11 @@ function Estimate() {
 			const imageUrl = URL.createObjectURL(imageBlob);
 			setAlteredImageUrl(imageUrl);
 			setOriginalImageUrl(null);
+
+			setLoading(false);
 		} catch (error) {
+			setLoading(false);
+			window.alert("Some error occurred");
 			console.error("Error uploading file:", error);
 		}
 	};
@@ -88,11 +95,17 @@ function Estimate() {
 
 	return (
 		<>
+			{loading && <Spinner />}
 			<NavBar />
 			<div className="container mx-auto px-4 py-8 text-center">
 				<h1 className="text-3xl font-bold mb-6 text-gray-800">
 					Bouldering Best Path Estimator
 				</h1>
+
+				<p>
+					Note: This is being run all on free servers, so expect to wait up to a
+					minute for the analysis to complete.
+				</p>
 
 				<div className="bg-white shadow-lg rounded-lg p-6 mb-8">
 					<h2 className="text-xl font-semibold mb-4 text-gray-700">
@@ -199,5 +212,42 @@ function Estimate() {
 		</>
 	);
 }
+
+const Spinner = () => {
+	return (
+		<div className="fixed inset-0 flex items-center justify-center backdrop-blur-[2px] bg-black/10">
+			<div className="flex items-end space-x-1 h-12">
+				{[...Array(5)].map((_, i) => (
+					<div
+						key={i}
+						className="w-2 bg-blue-500 rounded-full animate-[bounce_1s_ease-in-out_infinite]"
+						style={{
+							height: "60%",
+							animationDelay: `${i * 0.15}s`,
+						}}
+					>
+						<div className="w-full h-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-full opacity-80" />
+					</div>
+				))}
+			</div>
+
+			{/* Subtle reflection */}
+			<div className="absolute mt-14 flex items-start space-x-1 h-12 opacity-20 scale-y-[-0.4] blur-sm">
+				{[...Array(5)].map((_, i) => (
+					<div
+						key={i}
+						className="w-2 bg-blue-500 rounded-full animate-[bounce_1s_ease-in-out_infinite]"
+						style={{
+							height: "60%",
+							animationDelay: `${i * 0.15}s`,
+						}}
+					>
+						<div className="w-full h-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-full" />
+					</div>
+				))}
+			</div>
+		</div>
+	);
+};
 
 export default Estimate;
