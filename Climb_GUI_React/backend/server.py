@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from path_calc import shortestPath
 from PIL import Image
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -137,4 +138,5 @@ def alter_image(colors):
 
 
 if __name__ == "__main__":
-    app.run(port=8080, debug=True)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(port=port, debug=True)
