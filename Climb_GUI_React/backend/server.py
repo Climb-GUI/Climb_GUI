@@ -107,6 +107,9 @@ def get_colors(image, colors):
     result_image = Image.fromarray(cv.cvtColor(img_marked, cv.COLOR_BGR2RGB))
     return result_image
 
+@app.route("/api/test", methods=["GET"])
+def test():
+    return jsonify({"success": True}), 200
 
 @app.route("/api/getPath/<colors>", methods=["POST"])
 def alter_image(colors):
