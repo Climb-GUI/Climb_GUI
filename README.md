@@ -2,7 +2,7 @@
 
 Production Build: https://climb-gui.netlify.app/estimate
 
-This project started as an experimental web app for picking the best rock climbing routes, originally built with **Reflex** during **CalHacks 2023**. It was the first web app for both **Honoré** and **Vikram**, and it began as a simple idea to select climbing routes based on naive heuristics. Over time, the project evolved into a more structured **React frontend** and **Flask backend** setup, making it easier to develop and maintain.
+This project started as an experimental web app for picking the best rock climbing routes, originally built with **Reflex** during **CalHacks 2023**. It was the first web app for both **Honoré** and **Vikram**, and it began as a simple idea to select climbing routes based on naive heuristics. Over time, the project switched to **React frontend** and **Flask backend**, due to issues with hosting.
 
 ---
 
